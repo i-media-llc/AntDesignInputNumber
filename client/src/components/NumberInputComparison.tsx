@@ -1,19 +1,19 @@
 import { useState } from "react";
 import AntDesignInput from "./AntDesignInput";
-import HtmlNumberInput from "./HtmlNumberInput";
+import OriginalAntDesignInput from "./OriginalAntDesignInput";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function NumberInputComparison() {
-  const [antValue, setAntValue] = useState<number | string>(0);
-  const [htmlValue, setHtmlValue] = useState<number | string>(0);
+  const [originalAntValue, setOriginalAntValue] = useState<number | string>(0);
+  const [improvedAntValue, setImprovedAntValue] = useState<number | string>(0);
 
-  const handleAntValueChange = (value: number | string) => {
-    setAntValue(value);
+  const handleOriginalAntValueChange = (value: number | string) => {
+    setOriginalAntValue(value);
   };
 
-  const handleHtmlValueChange = (value: number | string) => {
-    setHtmlValue(value);
+  const handleImprovedAntValueChange = (value: number | string) => {
+    setImprovedAntValue(value);
   };
 
   return (
@@ -22,34 +22,34 @@ export default function NumberInputComparison() {
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-lg font-medium mb-4 text-gray-800">
-              Ant Design InputNumber
+              改良前のAnt Design InputNumber
             </h2>
-            <AntDesignInput value={antValue} onChange={handleAntValueChange} />
+            <OriginalAntDesignInput value={originalAntValue} onChange={handleOriginalAntValueChange} />
             
             <div className="pt-4 text-sm text-gray-700">
-              <p><span className="font-medium">Features:</span></p>
+              <p><span className="font-medium">特徴:</span></p>
               <ul className="list-disc pl-5 mt-1 space-y-1">
-                <li>Custom increment/decrement buttons</li>
-                <li>Focus and hover states</li>
-                <li>Built-in validation</li>
-                <li>Configurable step values</li>
+                <li>標準的な実装</li>
+                <li>日本語入力時の問題あり</li>
+                <li>全角数字入力後のEnterキーで二重入力バグあり</li>
+                <li>入力確定処理が不完全</li>
               </ul>
             </div>
           </div>
 
           <div>
             <h2 className="text-lg font-medium mb-4 text-gray-800">
-              HTML input[type="number"]
+              改良後のAnt Design InputNumber
             </h2>
-            <HtmlNumberInput value={htmlValue} onChange={handleHtmlValueChange} />
+            <AntDesignInput value={improvedAntValue} onChange={handleImprovedAntValueChange} />
             
             <div className="pt-4 text-sm text-gray-700">
-              <p><span className="font-medium">Features:</span></p>
+              <p><span className="font-medium">改良点:</span></p>
               <ul className="list-disc pl-5 mt-1 space-y-1">
-                <li>Native browser validation</li>
-                <li>Custom-styled to match Ant Design</li>
-                <li>Custom increment/decrement buttons</li>
-                <li>Consistent with Ant Design component</li>
+                <li>CompositionStart/Endイベント処理を追加</li>
+                <li>isComposing状態フラグで入力状態を追跡</li>
+                <li>日本語入力中のEnterキー処理を改善</li>
+                <li>二重入力バグを修正</li>
               </ul>
             </div>
           </div>
@@ -58,19 +58,19 @@ export default function NumberInputComparison() {
         <Separator className="my-8" />
 
         <div className="mt-2">
-          <h2 className="text-lg font-medium mb-4 text-gray-800">Results</h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-800">結果比較</h2>
           <div className="bg-gray-50 p-4 rounded-md">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <p className="text-sm font-medium text-gray-700">Ant Design InputNumber Value:</p>
+                <p className="text-sm font-medium text-gray-700">改良前の値:</p>
                 <p className="mt-1 text-xl font-semibold text-blue-500">
-                  {antValue === "" ? "Empty" : antValue}
+                  {originalAntValue === "" ? "Empty" : originalAntValue}
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-700">HTML Input Value:</p>
+                <p className="text-sm font-medium text-gray-700">改良後の値:</p>
                 <p className="mt-1 text-xl font-semibold text-blue-500">
-                  {htmlValue === "" ? "Empty" : htmlValue}
+                  {improvedAntValue === "" ? "Empty" : improvedAntValue}
                 </p>
               </div>
             </div>
