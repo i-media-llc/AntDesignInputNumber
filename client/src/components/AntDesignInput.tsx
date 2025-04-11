@@ -54,7 +54,7 @@ export default function AntDesignInput({ value, onChange }: AntDesignInputProps)
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Enter a number:
+        数値を入力:
       </label>
       <InputNumber
         min={0}
