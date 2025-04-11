@@ -59,7 +59,7 @@ export default function AntDesignInput({ value, onChange }: AntDesignInputProps)
       <InputNumber
         min={0}
         step={1}
-        value={value === "" ? null : value}
+        value={value === "" ? undefined : typeof value === "string" ? parseFloat(value) || undefined : value}
         onChange={handleChange}
         style={inputNumberStyle}
         ref={inputRef}

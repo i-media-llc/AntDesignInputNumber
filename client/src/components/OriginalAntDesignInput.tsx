@@ -26,13 +26,31 @@ export default function OriginalAntDesignInput({ value, onChange }: OriginalAntD
     onChange(newValue);
   };
 
-  // 日本語入力時にバグが再現するよう、不完全な実装を意図的に残す
-  // コンポジションイベントを処理しないためバグが発生する
+  // バグを意図的に再現するための実装
+  const [isCompositionEnded, setIsCompositionEnded] = useState(false);
+  
+  // 日本語入力の開始と終了を検知するが、終了時にフラグだけを立てる
+  const handleCompositionStart = () => {
+    console.log('Composition start in original component');
+  };
+  
+  const handleCompositionEnd = () => {
+    console.log('Composition end in original component');
+    setIsCompositionEnded(true);
+    // フラグを立てるだけで、実際には何も対策を行わない
+  };
+  
+  // Enterキー処理の欠陥を再現
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Enterキー処理の欠陥を再現（日本語入力確定後のEnterで二重入力）
     if (e.key === 'Enter') {
       console.log('Enter keydown in original component');
-      // 何もしない（バグ再現のため）
+      
+      // バグを意図的に再現: 日本語入力が終わった直後のEnterで値を重複させる
+      if (isCompositionEnded && typeof value === 'number') {
+        // 値を重複させるバグを意図的に再現
+        onChange(value * 10 + value % 10);
+        setIsCompositionEnded(false);
+      }
     }
   };
 
@@ -56,6 +74,8 @@ export default function OriginalAntDesignInput({ value, onChange }: OriginalAntD
         onChange={handleChange}
         style={inputNumberStyle}
         onKeyDown={handleKeyDown}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
       />
       {error && (
         <div className="mt-1 text-sm text-red-600">{error}</div>
