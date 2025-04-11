@@ -19,6 +19,20 @@ export default function NumberInputComparison() {
   return (
     <Card className="bg-white rounded-lg shadow-md">
       <CardContent className="p-6">
+        <div className="mt-2 mb-6">
+          <h2 className="text-lg font-medium mb-4 text-gray-800">不具合再現手順</h2>
+          <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
+            <ol className="list-decimal pl-5 space-y-2">
+              <li className="text-sm text-gray-700">全角の「<span className="font-mono bg-gray-100 px-1 rounded">１００</span>」を入力する</li>
+              <li className="text-sm text-gray-700">変換候補から「<span className="font-mono bg-gray-100 px-1 rounded">100</span>」を選んでEnterを押す</li>
+              <li className="text-sm text-gray-700">もう一度Enterを押すと改良前の入力が「<span className="font-mono bg-gray-100 px-1 rounded">100100</span>」になる</li>
+            </ol>
+            <p className="mt-3 text-sm text-gray-600 italic">※改良後のコンポーネントでは同じ操作をしても正しく処理されます</p>
+          </div>
+        </div>
+
+        <Separator className="my-6" />
+
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-lg font-medium mb-4 text-gray-800">
@@ -56,18 +70,6 @@ export default function NumberInputComparison() {
         </div>
 
         <Separator className="my-8" />
-
-        <div className="mt-2 mb-6">
-          <h2 className="text-lg font-medium mb-4 text-gray-800">不具合再現手順</h2>
-          <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
-            <ol className="list-decimal pl-5 space-y-2">
-              <li className="text-sm text-gray-700">全角の「<span className="font-mono bg-gray-100 px-1 rounded">１００</span>」を入力する</li>
-              <li className="text-sm text-gray-700">変換候補から「<span className="font-mono bg-gray-100 px-1 rounded">100</span>」を選んでEnterを押す</li>
-              <li className="text-sm text-gray-700">もう一度Enterを押すと改良前の入力が「<span className="font-mono bg-gray-100 px-1 rounded">100100</span>」になる</li>
-            </ol>
-            <p className="mt-3 text-sm text-gray-600 italic">※改良後のコンポーネントでは同じ操作をしても正しく処理されます</p>
-          </div>
-        </div>
 
         <div className="mt-2">
           <h2 className="text-lg font-medium mb-4 text-gray-800">結果比較</h2>
@@ -113,6 +115,40 @@ export default function NumberInputComparison() {
             <p className="mt-3 text-sm text-gray-600 italic">
               これにより、日本語入力確定のためのEnterキーのイベントが、誤って2回処理されることを防止できます。
             </p>
+            
+            <h3 className="text-md font-medium text-gray-800 mt-4 mb-2">修正コード</h3>
+            <pre className="bg-gray-100 p-3 rounded-md overflow-x-auto text-xs">
+{`// 状態管理の追加
+const [isComposing, setIsComposing] = useState(false);
+
+// 日本語入力の開始を検知
+const handleCompositionStart = () => {
+  setIsComposing(true);
+};
+
+// 日本語入力の終了を検知
+const handleCompositionEnd = () => {
+  setIsComposing(false);
+};
+
+// Enterキー処理の制御
+const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter' && isComposing) {
+    // 日本語入力中のEnterは処理しない
+    e.stopPropagation();
+    return;
+  }
+};
+
+// コンポーネントにイベントハンドラを追加
+<InputNumber
+  value={...}
+  onChange={...}
+  onCompositionStart={handleCompositionStart}
+  onCompositionEnd={handleCompositionEnd}
+  onKeyDown={handleKeyDown}
+/>`}
+            </pre>
           </div>
         </div>
       </CardContent>
